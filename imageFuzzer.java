@@ -2,6 +2,7 @@ import java.io.File;
 import java.io.IOException;
 import java.awt.image.BufferedImage;
 import javax.imageio.ImageIO;
+import java.util.ArrayList;
 
 public class imageFuzzer{
 	public static void main(String[] args) throws IOException{
@@ -9,7 +10,7 @@ public class imageFuzzer{
 		File f = null;
 		int height = 0;
 		int width = 0;
-		ArrayList pixelList<Integer> = new ArrayList<Integer>();
+		ArrayList<Integer> pixelList = new ArrayList<Integer>();
 
 		try{
 			image = getBufferedImage(image, f, height, width);
@@ -23,7 +24,7 @@ public class imageFuzzer{
 			System.out.println("Error: " + e);
 		}
 
-		getRegion(image, height, width);
+		getRegion(image, height, width, pixelList);
 	}
 
 	public static BufferedImage getBufferedImage(BufferedImage image, File f, int height, int width) throws IOException{
@@ -88,20 +89,23 @@ public class imageFuzzer{
 			for(int h = 0; h < height; h++){
 				column = h;
 
-				getRGBValues(getRGB(w, h), pixelList);
-				a = pixelList(0);
-				r = pixelList(1);
-				g = pixelList(2);
-				b = pixelList(3);
+				getRGBValues(pixelArray[w][h], pixelList);
+				a = pixelList.get(0);
+				r = pixelList.get(1);
+				g = pixelList.get(2);
+				b = pixelList.get(3);
 			}
 		}
 	}
 
-	public static arrayList<int> getRGBValues(int pixel, pixelList){
+	public static ArrayList<Integer> getRGBValues(int pixel, ArrayList<Integer> pixelList){
 		pixelList.add((pixel>>24)&0xff);
 		pixelList.add((pixel>>16)&0xff);
 		pixelList.add((pixel>>8)&0xff);
 		pixelList.add(pixel&0xff);
+
+		for(int x = 0; x < pixelList.size(); x++)
+			System.out.println(pixelList.get(x));
 
 		return pixelList;
 	}
