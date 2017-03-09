@@ -102,12 +102,12 @@ public class imageFuzzer{
 				// System.out.println("INITIAL PIXELS----------------- " + bImagePixelList[wInitial][hInitial-1]);
 		}
 
-		int hTest, wTest = 0;
-		for(wTest = 0; wTest < 1; wTest++){
-			for(hTest = 0; hTest < height; hTest++){
-				System.out.println("INITIAL PIXELS----------------- " + bImagePixelList[wTest][hTest]);		
-			}
-		}
+		// int hTest, wTest = 0;
+		// for(wTest = 0; wTest < 1; wTest++){
+		// 	for(hTest = 0; hTest < height; hTest++){
+		// 		System.out.println("INITIAL PIXELS----------------- " + bImagePixelList[wTest][hTest]);		
+		// 	}
+		// }
 
 		// Checks to see if the pixels are generally the same color, if so, makes it the same color as the ancestor, else it randomizes the color
 		for(int w = 1; w < width; w++){
@@ -134,29 +134,40 @@ public class imageFuzzer{
 					}
 				} else {
 					// else if it is a "middle" pixel, and the pixel is the same as the left, lower left diagonal, and upper left diagonal, set to same 
-					if(comparePixels(getRGBValues(pixelArray[w][h], pixelList), getRGBValues(pixelArray[w-1][h], pixelList)) && 
-						comparePixels(getRGBValues(pixelArray[w][h], pixelList), getRGBValues(pixelArray[w-1][h+1], pixelList)) && 
-						comparePixels(getRGBValues(pixelArray[w][h], pixelList), getRGBValues(pixelArray[w-1][h-1], pixelList))){
+					if((comparePixels(getRGBValues(pixelArray[w][h], pixelList), getRGBValues(pixelArray[w-1][h], pixelList)) && 
+							comparePixels(getRGBValues(pixelArray[w][h], pixelList), getRGBValues(pixelArray[w-1][h-1], pixelList))) ||
+						(comparePixels(getRGBValues(pixelArray[w][h], pixelList), getRGBValues(pixelArray[w-1][h], pixelList)) && 
+							comparePixels(getRGBValues(pixelArray[w][h], pixelList), getRGBValues(pixelArray[w-1][h+1], pixelList))) ||
+						(comparePixels(getRGBValues(pixelArray[w][h], pixelList), getRGBValues(pixelArray[w-1][h], pixelList)) && 
+							comparePixels(getRGBValues(pixelArray[w][h], pixelList), getRGBValues(pixelArray[w][h-1], pixelList))) 
+						// Have 
+						// left AND top left 
+						// AND 
+						// left AND top  
+						// OR
+						// left AND bottom left
+						// Need 
+						// top left AND bottome left
+						// OR
+						// top left AND TOP
+						// OR
+						// Bottom Left AND TOP
+						){
 						bImagePixelList[w][h] = bImagePixelList[w][h-1];
 					} else {
 						// else randomize it
 						bImagePixelList[w][h] = setPixelValue(pixelRandomizer());
 					}
 				}
-				getRGBValues(pixelArray[w][h], pixelList);
-				a = pixelList.get(0);
-				r = pixelList.get(1);
-				g = pixelList.get(2);
-				b = pixelList.get(3);
 			}
 		}
 
-		int hTestTwo, wTestTwo = 0;
-		for(wTestTwo = 100; wTestTwo < 130; wTestTwo++){
-			for(hTestTwo = 75; hTestTwo < 90; hTestTwo++){
-				System.out.println("Middle PIXELS----------------- " + bImagePixelList[wTestTwo][hTestTwo]);
-			}
-		}
+		// int hTestTwo, wTestTwo = 0;
+		// for(wTestTwo = 200; wTestTwo < width; wTestTwo++){
+		// 	for(hTestTwo = 150; hTestTwo < height; hTestTwo++){
+		// 		System.out.println("Middle PIXELS----------------- " + bImagePixelList[wTestTwo][hTestTwo]);
+		// 	}
+		// }
 
 		// Sets the RGB values to the image
 		for(int setWidth = 0; setWidth < width; setWidth++){
@@ -176,8 +187,12 @@ public class imageFuzzer{
 		Random rand = new Random();
 		ArrayList<Integer> pixelRandomized = new ArrayList<Integer>();
 
-		for(int i = 1; i < 5; i++)
+		for(int i = 1; i < 5; i++){
 			pixelRandomized.add(rand.nextInt(256));
+		}
+
+		// for(int x = 0; x < 4; x++)
+		// 	System.out.println("RANDOMIZED VALUES----------- " + pixelRandomized.get(x));
 
 		return pixelRandomized;
 	}
