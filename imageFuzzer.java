@@ -59,9 +59,9 @@ public class imageFuzzer{
 			else
 				System.out.println("Image is null");
 			System.out.println("Updating your picture!");
-			f = new File("/home/jae/Desktop/imageFuzzerPictures/output.jpg");
+			f = new File("/home/jae/Desktop/imageFuzzerPictures/output.png");
 			System.out.println("After new file++++++++++++");
-			ImageIO.write(image, "jpg", f);
+			ImageIO.write(image, "png", f);
 			System.out.println("After image write+++++++++++");
 			System.out.println("Picture updated!");
 		}catch(IOException e){
@@ -77,7 +77,6 @@ public class imageFuzzer{
 		width = (int)image.getWidth();
 		int[][] pixelArray = new int[width][height];
 		int[][] bImagePixelList = new int[width][height];
-		ArrayList<Integer> pixelList = new ArrayList<Integer>();
 		
 		int a, r, g, b = 0;
 
@@ -115,18 +114,18 @@ public class imageFuzzer{
 				// If it is the top row
 				if(h == 0){
 					// If the pixel matches the pixel to the left and the pixel to left lower diagonal, set to the same
-					if(comparePixels(getRGBValues(pixelArray[w][h], pixelList), getRGBValues(pixelArray[w-1][h], pixelList)) && 
-						comparePixels(getRGBValues(pixelArray[w][h], pixelList), getRGBValues(pixelArray[w-1][h+1], pixelList))){
+					if(comparePixels(getRGBValues(pixelArray[w][h]), getRGBValues(pixelArray[w-1][h])) && 
+						comparePixels(getRGBValues(pixelArray[w][h]), getRGBValues(pixelArray[w-1][h+1]))){
 						bImagePixelList[w][h] = bImagePixelList[w-1][h];
 					} else {
 						// Else randomize
 						bImagePixelList[w][h] = setPixelValue(pixelRandomizer());
 					}
 					// If the pixel is on the bottom row
-				} else if(h == height -1){
+				} else if(h == height - 1){
 					// If the pixel matches the pixel to the left and the pixel to the upper left diagonal, set to same
-					if(comparePixels(getRGBValues(pixelArray[w][h], pixelList), getRGBValues(pixelArray[w-1][h], pixelList)) && 
-						comparePixels(getRGBValues(pixelArray[w][h], pixelList), getRGBValues(pixelArray[w-1][h-1], pixelList))){
+					if(comparePixels(getRGBValues(pixelArray[w][h]), getRGBValues(pixelArray[w-1][h])) && 
+						comparePixels(getRGBValues(pixelArray[w][h]), getRGBValues(pixelArray[w-1][h-1]))){
 						bImagePixelList[w][h] = bImagePixelList[w][h-1];
 					} else {
 						// Else randomize
@@ -134,12 +133,12 @@ public class imageFuzzer{
 					}
 				} else {
 					// else if it is a "middle" pixel, and the pixel is the same as the left, lower left diagonal, and upper left diagonal, set to same 
-					if((comparePixels(getRGBValues(pixelArray[w][h], pixelList), getRGBValues(pixelArray[w-1][h], pixelList)) && 
-							comparePixels(getRGBValues(pixelArray[w][h], pixelList), getRGBValues(pixelArray[w-1][h-1], pixelList))) ||
-						(comparePixels(getRGBValues(pixelArray[w][h], pixelList), getRGBValues(pixelArray[w-1][h], pixelList)) && 
-							comparePixels(getRGBValues(pixelArray[w][h], pixelList), getRGBValues(pixelArray[w-1][h+1], pixelList))) ||
-						(comparePixels(getRGBValues(pixelArray[w][h], pixelList), getRGBValues(pixelArray[w-1][h], pixelList)) && 
-							comparePixels(getRGBValues(pixelArray[w][h], pixelList), getRGBValues(pixelArray[w][h-1], pixelList))) 
+					if((comparePixels(getRGBValues(pixelArray[w][h]), getRGBValues(pixelArray[w-1][h])) && 
+							comparePixels(getRGBValues(pixelArray[w][h]), getRGBValues(pixelArray[w-1][h-1]))) ||
+						(comparePixels(getRGBValues(pixelArray[w][h]), getRGBValues(pixelArray[w-1][h])) && 
+							comparePixels(getRGBValues(pixelArray[w][h]), getRGBValues(pixelArray[w-1][h+1]))) ||
+						(comparePixels(getRGBValues(pixelArray[w][h]), getRGBValues(pixelArray[w-1][h])) && 
+							comparePixels(getRGBValues(pixelArray[w][h]), getRGBValues(pixelArray[w][h-1]))) 
 						// Have 
 						// left AND top left 
 						// AND 
@@ -198,7 +197,9 @@ public class imageFuzzer{
 	}
 
 	// Gets the Alpha, Red, Blue, and Green values from the pixel value and turns them into readable ints from "signed"
-	public static ArrayList<Integer> getRGBValues(int pixel, ArrayList<Integer> pixelList){
+	public static ArrayList<Integer> getRGBValues(int pixel){
+		ArrayList<Integer> pixelList = new ArrayList<Integer>();
+
 		pixelList.add((pixel>>24)&0xff);
 		pixelList.add((pixel>>16)&0xff);
 		pixelList.add((pixel>>8)&0xff);
