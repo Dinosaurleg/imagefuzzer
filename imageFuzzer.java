@@ -92,13 +92,18 @@ public class imageFuzzer{
 			}
 		}
 
-		// Randomizes the first column of pixels of the newly colored image
+		// Randomizes the first pixel
+		bImagePixelList[0][0] = setPixelValue(pixelRandomizer());
+
+		// Sets rule for the first column: if the pixel is the same color as the one above, make it the same color as well
 		for(int wInitial = 0; wInitial < 1; wInitial++)
 		{
-			for(int hInitial = 0; hInitial < height; hInitial++)
-				bImagePixelList[wInitial][hInitial] = setPixelValue(pixelRandomizer());
-				// System.out.println("hInitial----------- " + hInitial);
-				// System.out.println("INITIAL PIXELS----------------- " + bImagePixelList[wInitial][hInitial-1]);
+			for(int hInitial = 1; hInitial < height; hInitial++)
+				if(comparePixels(getRGBValues(pixelArray[wInitial][hInitial]), getRGBValues(pixelArray[wInitial][hInitial-1]))){
+					bImagePixelList[wInitial][hInitial] = bImagePixelList[wInitial][hInitial-1];
+				} else {
+					bImagePixelList[wInitial][hInitial] = setPixelValue(pixelRandomizer());
+				}
 		}
 
 		// int hTest, wTest = 0;
@@ -132,43 +137,38 @@ public class imageFuzzer{
 						bImagePixelList[w][h] = setPixelValue(pixelRandomizer());
 					}
 				} else {
-					// else if it is a "middle" pixel, and the pixel is the same as the left, lower left diagonal, and upper left diagonal, set to same 
+					// Else if it is "middle pixel"
+
+					// If the pixel is the same as the left and top left diagonal, set to left
 					if(comparePixels(getRGBValues(pixelArray[w][h]), getRGBValues(pixelArray[w-1][h])) && 
 							comparePixels(getRGBValues(pixelArray[w][h]), getRGBValues(pixelArray[w-1][h-1]))){
 
 						bImagePixelList[w][h] = bImagePixelList[w-1][h];
+					// If the pixel is the same as the left and bottom left diagonal, set to left
 					} else if(comparePixels(getRGBValues(pixelArray[w][h]), getRGBValues(pixelArray[w-1][h])) && 
 									comparePixels(getRGBValues(pixelArray[w][h]), getRGBValues(pixelArray[w-1][h+1]))){
 
 						bImagePixelList[w][h] = bImagePixelList[w-1][h];
+					//  If the pixel is the same as the one to the left and above, set to above
 					} else if(comparePixels(getRGBValues(pixelArray[w][h]), getRGBValues(pixelArray[w-1][h])) && 
 							comparePixels(getRGBValues(pixelArray[w][h]), getRGBValues(pixelArray[w][h-1]))){
 
 						bImagePixelList[w][h] = bImagePixelList[w-1][h];
+					// If the pixel is the same as the one top left diagonal and bottom left diagonal, set it to the top left
 					} else if(comparePixels(getRGBValues(pixelArray[w][h]), getRGBValues(pixelArray[w-1][h-1])) && 
 							comparePixels(getRGBValues(pixelArray[w][h]), getRGBValues(pixelArray[w-1][h+1]))){
 
 						bImagePixelList[w][h] = bImagePixelList[w-1][h-1];
+					// If the pixel is the same as the one top left diagonal and above, set it to the top
 					} else if(comparePixels(getRGBValues(pixelArray[w][h]), getRGBValues(pixelArray[w-1][h-1])) && 
 							comparePixels(getRGBValues(pixelArray[w][h]), getRGBValues(pixelArray[w][h-1]))){
 
-						bImagePixelList[w][h] = bImagePixelList[w-1][h-1];
+						bImagePixelList[w][h] = bImagePixelList[w][h-1];
+					// If the pixel is the same as the one bottom left diagonal and above, set it to the above 
 					}else if(comparePixels(getRGBValues(pixelArray[w][h]), getRGBValues(pixelArray[w-1][h+1])) && 
 							comparePixels(getRGBValues(pixelArray[w][h]), getRGBValues(pixelArray[w][h-1]))){
 
-						bImagePixelList[w][h] = bImagePixelList[w-1][h+1];
-						// Have 
-						// left AND top left 
-						// AND 
-						// left AND top  
-						// OR
-						// left AND bottom left
-						// Need 
-						// top left AND bottome left
-						// OR
-						// top left AND TOP
-						// OR
-						// Bottom Left AND TOP
+						bImagePixelList[w][h] = bImagePixelList[w][h-1];
 					} else {
 						// else randomize it
 						bImagePixelList[w][h] = setPixelValue(pixelRandomizer());
@@ -193,8 +193,6 @@ public class imageFuzzer{
 			}
 		}
 		return image;
-
-		// NEED TO CHECK EACH A, R, G, B VALUES AND NOT THE ACTUAL PIXEL INT
 	}
 
 	// Sets pseudorandom values in an arraylist to simulate random values for Alpha, Red, Blue, Green
@@ -240,7 +238,7 @@ public class imageFuzzer{
 
 	// Compares alpha, red, green, blue values to see if they are within 30 values of eachother
 	public static boolean comparePixels(ArrayList<Integer> oldImageList, ArrayList<Integer> newImageList){
-		if(((Math.abs(oldImageList.get(0) - newImageList.get(0)) <= 10)) && ((Math.abs(oldImageList.get(1) - newImageList.get(1)) <= 10)) &&
+		if(((Math.abs(oldImageList.get(0) - newImageList.get(0)) <= 255)) && ((Math.abs(oldImageList.get(1) - newImageList.get(1)) <= 10)) &&
 			((Math.abs(oldImageList.get(2) - newImageList.get(2)) <= 10)) && ((Math.abs(oldImageList.get(3) - newImageList.get(3)) <= 10))){
 			return true;
 		}
