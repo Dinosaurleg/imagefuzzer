@@ -34,7 +34,7 @@ public class imageFuzzer{
 	public static BufferedImage getBufferedImage(BufferedImage image, File f, int height, int width) throws IOException{
 			try{
 				System.out.println("Trying to upload picture!");
-				f = new File("/home/jae/Desktop/imageFuzzerPictures/pic.jpg");
+				f = new File("/home/jae/Desktop/imageFuzzerPictures/pic2.jpg");
 				image = ImageIO.read(f);
 				height = (int)image.getHeight();
 				width = (int)image.getWidth();
@@ -59,9 +59,9 @@ public class imageFuzzer{
 			else
 				System.out.println("Image is null");
 			System.out.println("Updating your picture!");
-			f = new File("/home/jae/Desktop/imageFuzzerPictures/output.png");
+			f = new File("/home/jae/Desktop/imageFuzzerPictures/output.jpg");
 			System.out.println("After new file++++++++++++");
-			ImageIO.write(image, "png", f);
+			ImageIO.write(image, "jpg", f);
 			System.out.println("After image write+++++++++++");
 			System.out.println("Picture updated!");
 		}catch(IOException e){
@@ -126,7 +126,7 @@ public class imageFuzzer{
 					// If the pixel matches the pixel to the left and the pixel to the upper left diagonal, set to same
 					if(comparePixels(getRGBValues(pixelArray[w][h]), getRGBValues(pixelArray[w-1][h])) && 
 						comparePixels(getRGBValues(pixelArray[w][h]), getRGBValues(pixelArray[w-1][h-1]))){
-						bImagePixelList[w][h] = bImagePixelList[w][h-1];
+						bImagePixelList[w][h] = bImagePixelList[w-1][h];
 					} else {
 						// Else randomize
 						bImagePixelList[w][h] = setPixelValue(pixelRandomizer());
@@ -135,9 +135,20 @@ public class imageFuzzer{
 					// else if it is a "middle" pixel, and the pixel is the same as the left, lower left diagonal, and upper left diagonal, set to same 
 					if((comparePixels(getRGBValues(pixelArray[w][h]), getRGBValues(pixelArray[w-1][h])) && 
 							comparePixels(getRGBValues(pixelArray[w][h]), getRGBValues(pixelArray[w-1][h-1]))) ||
+						
 						(comparePixels(getRGBValues(pixelArray[w][h]), getRGBValues(pixelArray[w-1][h])) && 
 							comparePixels(getRGBValues(pixelArray[w][h]), getRGBValues(pixelArray[w-1][h+1]))) ||
+						
 						(comparePixels(getRGBValues(pixelArray[w][h]), getRGBValues(pixelArray[w-1][h])) && 
+							comparePixels(getRGBValues(pixelArray[w][h]), getRGBValues(pixelArray[w][h-1]))) ||
+						
+						(comparePixels(getRGBValues(pixelArray[w][h]), getRGBValues(pixelArray[w-1][h-1])) && 
+							comparePixels(getRGBValues(pixelArray[w][h]), getRGBValues(pixelArray[w-1][h+1]))) || 
+
+						(comparePixels(getRGBValues(pixelArray[w][h]), getRGBValues(pixelArray[w-1][h-1])) && 
+							comparePixels(getRGBValues(pixelArray[w][h]), getRGBValues(pixelArray[w][h-1]))) ||
+
+						(comparePixels(getRGBValues(pixelArray[w][h]), getRGBValues(pixelArray[w-1][h+1])) && 
 							comparePixels(getRGBValues(pixelArray[w][h]), getRGBValues(pixelArray[w][h-1]))) 
 						// Have 
 						// left AND top left 
@@ -152,7 +163,7 @@ public class imageFuzzer{
 						// OR
 						// Bottom Left AND TOP
 						){
-						bImagePixelList[w][h] = bImagePixelList[w][h-1];
+						bImagePixelList[w][h] = bImagePixelList[w-1][h];
 					} else {
 						// else randomize it
 						bImagePixelList[w][h] = setPixelValue(pixelRandomizer());
@@ -224,8 +235,8 @@ public class imageFuzzer{
 
 	// Compares alpha, red, green, blue values to see if they are within 30 values of eachother
 	public static boolean comparePixels(ArrayList<Integer> oldImageList, ArrayList<Integer> newImageList){
-		if(((Math.abs(oldImageList.get(0) - newImageList.get(0)) <= 30)) && ((Math.abs(oldImageList.get(1) - newImageList.get(1)) <= 30)) &&
-			((Math.abs(oldImageList.get(2) - newImageList.get(2)) <= 30)) && ((Math.abs(oldImageList.get(3) - newImageList.get(3)) <= 30))){
+		if(((Math.abs(oldImageList.get(0) - newImageList.get(0)) <= 10)) && ((Math.abs(oldImageList.get(1) - newImageList.get(1)) <= 10)) &&
+			((Math.abs(oldImageList.get(2) - newImageList.get(2)) <= 10)) && ((Math.abs(oldImageList.get(3) - newImageList.get(3)) <= 10))){
 			return true;
 		}
 
