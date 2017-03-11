@@ -133,23 +133,30 @@ public class imageFuzzer{
 					}
 				} else {
 					// else if it is a "middle" pixel, and the pixel is the same as the left, lower left diagonal, and upper left diagonal, set to same 
-					if((comparePixels(getRGBValues(pixelArray[w][h]), getRGBValues(pixelArray[w-1][h])) && 
-							comparePixels(getRGBValues(pixelArray[w][h]), getRGBValues(pixelArray[w-1][h-1]))) ||
-						
-						(comparePixels(getRGBValues(pixelArray[w][h]), getRGBValues(pixelArray[w-1][h])) && 
-							comparePixels(getRGBValues(pixelArray[w][h]), getRGBValues(pixelArray[w-1][h+1]))) ||
-						
-						(comparePixels(getRGBValues(pixelArray[w][h]), getRGBValues(pixelArray[w-1][h])) && 
-							comparePixels(getRGBValues(pixelArray[w][h]), getRGBValues(pixelArray[w][h-1]))) ||
-						
-						(comparePixels(getRGBValues(pixelArray[w][h]), getRGBValues(pixelArray[w-1][h-1])) && 
-							comparePixels(getRGBValues(pixelArray[w][h]), getRGBValues(pixelArray[w-1][h+1]))) || 
+					if(comparePixels(getRGBValues(pixelArray[w][h]), getRGBValues(pixelArray[w-1][h])) && 
+							comparePixels(getRGBValues(pixelArray[w][h]), getRGBValues(pixelArray[w-1][h-1]))){
 
-						(comparePixels(getRGBValues(pixelArray[w][h]), getRGBValues(pixelArray[w-1][h-1])) && 
-							comparePixels(getRGBValues(pixelArray[w][h]), getRGBValues(pixelArray[w][h-1]))) ||
+						bImagePixelList[w][h] = bImagePixelList[w-1][h];
+					} else if(comparePixels(getRGBValues(pixelArray[w][h]), getRGBValues(pixelArray[w-1][h])) && 
+									comparePixels(getRGBValues(pixelArray[w][h]), getRGBValues(pixelArray[w-1][h+1]))){
 
-						(comparePixels(getRGBValues(pixelArray[w][h]), getRGBValues(pixelArray[w-1][h+1])) && 
-							comparePixels(getRGBValues(pixelArray[w][h]), getRGBValues(pixelArray[w][h-1]))) 
+						bImagePixelList[w][h] = bImagePixelList[w-1][h];
+					} else if(comparePixels(getRGBValues(pixelArray[w][h]), getRGBValues(pixelArray[w-1][h])) && 
+							comparePixels(getRGBValues(pixelArray[w][h]), getRGBValues(pixelArray[w][h-1]))){
+
+						bImagePixelList[w][h] = bImagePixelList[w-1][h];
+					} else if(comparePixels(getRGBValues(pixelArray[w][h]), getRGBValues(pixelArray[w-1][h-1])) && 
+							comparePixels(getRGBValues(pixelArray[w][h]), getRGBValues(pixelArray[w-1][h+1]))){
+
+						bImagePixelList[w][h] = bImagePixelList[w-1][h-1];
+					} else if(comparePixels(getRGBValues(pixelArray[w][h]), getRGBValues(pixelArray[w-1][h-1])) && 
+							comparePixels(getRGBValues(pixelArray[w][h]), getRGBValues(pixelArray[w][h-1]))){
+
+						bImagePixelList[w][h] = bImagePixelList[w-1][h-1];
+					}else if(comparePixels(getRGBValues(pixelArray[w][h]), getRGBValues(pixelArray[w-1][h+1])) && 
+							comparePixels(getRGBValues(pixelArray[w][h]), getRGBValues(pixelArray[w][h-1]))){
+
+						bImagePixelList[w][h] = bImagePixelList[w-1][h+1];
 						// Have 
 						// left AND top left 
 						// AND 
@@ -162,8 +169,6 @@ public class imageFuzzer{
 						// top left AND TOP
 						// OR
 						// Bottom Left AND TOP
-						){
-						bImagePixelList[w][h] = bImagePixelList[w-1][h];
 					} else {
 						// else randomize it
 						bImagePixelList[w][h] = setPixelValue(pixelRandomizer());
