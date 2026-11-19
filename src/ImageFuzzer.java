@@ -1,3 +1,4 @@
+import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -69,75 +70,21 @@ public class ImageFuzzer {
     }
 
     public static BufferedImage colorImage(BufferedImage image, int height, int width) throws IOException {
-        height = image.getHeight();
-        width = image.getWidth();
-        var pixels = new int[width][height];
-        var recolored = new int[width][height];
-
-        System.out.println("hdalskdnlajsna");
-        System.out.println(height);
-        System.out.println(width);
-
-        for (int x = 0; x < width; x++) {
-            for (int y = 0; y < height; y++) {
-                pixels[x][y] = image.getRGB(x, y);
-            }
-        }
-
-        recolored[0][0] = setPixelValue(pixelRandomizer());
-        for (int y = 1; y < height; y++) {
-            if (matches(pixels, 0, y, 0, y - 1)) {
-                recolored[0][y] = recolored[0][y - 1];
-            } else {
-                recolored[0][y] = setPixelValue(pixelRandomizer());
-            }
-        }
-
-        for (int x = 1; x < width; x++) {
-            for (int y = 0; y < height; y++) {
-                if (y == 0) {
-                    if (matches(pixels, x, y, x - 1, y)
-                            && matches(pixels, x, y, x - 1, y + 1)) {
-                        recolored[x][y] = recolored[x - 1][y];
-                    } else {
-                        recolored[x][y] = setPixelValue(pixelRandomizer());
-                    }
-                } else if (y == height - 1) {
-                    if (matches(pixels, x, y, x - 1, y)
-                            && matches(pixels, x, y, x - 1, y - 1)) {
-                        recolored[x][y] = recolored[x - 1][y];
-                    } else {
-                        recolored[x][y] = setPixelValue(pixelRandomizer());
-                    }
-                } else {
-                    boolean left = matches(pixels, x, y, x - 1, y);
-                    boolean upperLeft = matches(pixels, x, y, x - 1, y - 1);
-                    boolean lowerLeft = matches(pixels, x, y, x - 1, y + 1);
-                    boolean above = matches(pixels, x, y, x, y - 1);
-
-                    if (left && (upperLeft || lowerLeft || above)) {
-                        recolored[x][y] = recolored[x - 1][y];
-                    } else if (upperLeft && lowerLeft) {
-                        recolored[x][y] = recolored[x - 1][y - 1];
-                    } else if ((upperLeft || lowerLeft) && above) {
-                        recolored[x][y] = recolored[x][y - 1];
-                    } else {
-                        recolored[x][y] = setPixelValue(pixelRandomizer());
-                    }
-                }
-            }
-        }
-
-        for (int x = 0; x < width; x++) {
-            for (int y = 0; y < height; y++) {
-                image.setRGB(x, y, recolored[x][y]);
+        float hueShift = new Random().nextFloat(1f / 12f, 11f / 12f);
+        for (int x = 0; x < image.getWidth(); x++) {
+            for (int y = 0; y < image.getHeight(); y++) {
+                int pixel = image.getRGB(x, y);
+                float[] hsb = Color.RGBtoHSB(
+                        (pixel >> 16) & 0xff,
+                        (pixel >> 8) & 0xff,
+                        pixel & 0xff,
+                        null);
+                int shifted = Color.HSBtoRGB(
+                        (hsb[0] + hueShift) % 1f, hsb[1], hsb[2]);
+                image.setRGB(x, y, (pixel & 0xff000000) | (shifted & 0x00ffffff));
             }
         }
         return image;
-    }
-
-    private static boolean matches(int[][] pixels, int x, int y, int otherX, int otherY) {
-        return comparePixels(getRGBValues(pixels[x][y]), getRGBValues(pixels[otherX][otherY]));
     }
 
     public static ArrayList<Integer> pixelRandomizer() {
