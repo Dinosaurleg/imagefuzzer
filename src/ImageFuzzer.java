@@ -32,7 +32,7 @@ public class ImageFuzzer {
             throws IOException {
         try {
             System.out.println("Trying to upload picture!");
-            file = new File("../bananas-1354785_1920-1024x683.png");
+            file = new File("../adventure-time-1718205825928.jpg");
             image = ImageIO.read(file);
             height = image.getHeight();
             width = image.getWidth();
